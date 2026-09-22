@@ -506,7 +506,7 @@ $('gear').addEventListener('click', () => openSettings());
 window.updateReady = (u) => {
   document.querySelectorAll('#gear, #cgear, #sgear').forEach((b) => {
     b.classList.add('has-update');
-    b.title = `Update to ${u.version}`;
+    b.title = u.staged ? `Update ${u.version} installs when you quit` : `Update to ${u.version}`;
   });
 };
 

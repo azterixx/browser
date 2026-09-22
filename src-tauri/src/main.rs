@@ -1765,6 +1765,7 @@ fn main() {
         .plugin(logs::plugin())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(State::default())
+        .manage(updater::Ready::default())
         .invoke_handler(tauri::generate_handler![
             get_state, new_tab, activate_tab, close, navigate, nav, island, pill_size, reveal, set_mode,
             ext_list, ext_install, ext_remove, get_settings, set_settings, open_settings,
@@ -1912,6 +1913,7 @@ fn main() {
         Ok(app) => app.run(|app, event| {
             if let tauri::RunEvent::Exit = event {
                 persist(app);
+                updater::install_on_quit(app);
             }
         }),
         Err(e) => {

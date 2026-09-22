@@ -250,12 +250,14 @@ async function checkUpdates(manual) {
   }
   btn.disabled = false;
   if (!found) {
-    status.textContent = manual ? 'You are on the latest version.' : 'Checks for a new version on its own, a few times a day.';
+    status.textContent = manual ? 'You are on the latest version.' : 'Updates download on their own and install when you quit.';
     btn.textContent = 'Check for updates';
     return;
   }
-  status.textContent = `Version ${found.version} is ready${found.notes ? `: ${found.notes.split('\n')[0]}` : ''}`;
-  btn.textContent = `Update to ${found.version}`;
+  status.textContent = found.staged
+    ? `Version ${found.version} is downloaded. It installs by itself when you quit Browser.`
+    : `Version ${found.version} is ready to install.`;
+  btn.textContent = found.staged ? `Restart into ${found.version}` : `Update to ${found.version}`;
 }
 
 async function installUpdate() {
