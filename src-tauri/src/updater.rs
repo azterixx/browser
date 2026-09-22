@@ -47,10 +47,14 @@ pub async fn update_install(app: AppHandle) -> Result<(), String> {
         .await
         .map_err(|e| e.to_string())?
         .ok_or("Already up to date")?;
+    log::info!("installing update {}", update.version);
     update
         .download_and_install(|_, _| {}, || {})
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| {
+            log::error!("update install failed: {e}");
+            e.to_string()
+        })?;
     app.restart();
 }
 
@@ -60,10 +64,15 @@ pub fn watch(app: &AppHandle) {
     std::thread::spawn(move || {
         std::thread::sleep(FIRST_CHECK_AFTER);
         loop {
-            if let Ok(Some(found)) = tauri::async_runtime::block_on(look(&app)) {
-                if let (Some(ui), Ok(json)) = (app.get_webview("ui"), serde_json::to_string(&found)) {
-                    let _ = ui.eval(format!("window.updateReady && window.updateReady({json})"));
+            match tauri::async_runtime::block_on(look(&app)) {
+                Ok(Some(found)) => {
+                    log::info!("update {} is available", found.version);
+                    if let (Some(ui), Ok(json)) = (app.get_webview("ui"), serde_json::to_string(&found)) {
+                        let _ = ui.eval(format!("window.updateReady && window.updateReady({json})"));
+                    }
                 }
+                Ok(None) => log::info!("no update, this is the latest version"),
+                Err(e) => log::warn!("update check failed: {e}"),
             }
             std::thread::sleep(CHECK_EVERY);
         }

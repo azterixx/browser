@@ -11,6 +11,7 @@ use std::{
 };
 
 mod extensions;
+mod logs;
 mod updater;
 
 use serde::{Deserialize, Serialize};
@@ -1760,7 +1761,8 @@ fn ui_builder(app: &AppHandle) -> WebviewBuilder<tauri::Wry> {
 }
 
 fn main() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
+        .plugin(logs::plugin())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(State::default())
         .invoke_handler(tauri::generate_handler![
@@ -1768,7 +1770,7 @@ fn main() {
             ext_list, ext_install, ext_remove, get_settings, set_settings, open_settings,
             take_pending_install, clear_data, reopen_tab, suggest, clear_history, open_downloads,
             downloads_list, download_open, downloads_clear, pdf_fetch, pdf_save, print_page,
-            updater::update_check, updater::update_install
+            updater::update_check, updater::update_install, logs::open_logs
         ])
         .on_menu_event(|app, event| {
             let app = app.clone();
@@ -1790,6 +1792,13 @@ fn main() {
         })
         .setup(|app| {
             let handle = app.handle().clone();
+            logs::catch_panics();
+            log::info!(
+                "Browser {} starting on {} ({})",
+                handle.package_info().version,
+                std::env::consts::OS,
+                std::env::consts::ARCH
+            );
             {
                 let st = app.state::<State>();
                 let mut b = st.lock().unwrap();
@@ -1861,11 +1870,21 @@ fn main() {
             }
             Ok(())
         })
-        .build(tauri::generate_context!())
-        .expect("error while building browser")
-        .run(|app, event| {
+        .build(tauri::generate_context!());
+
+    // A missing WebView2 on Windows dies here, before any log file exists,
+    // so the reason goes somewhere findable no matter what.
+    match app {
+        Ok(app) => app.run(|app, event| {
             if let tauri::RunEvent::Exit = event {
                 persist(app);
             }
-        });
+        }),
+        Err(e) => {
+            let note = format!("Browser could not start: {e}\n");
+            eprintln!("{note}");
+            let _ = std::fs::write(std::env::temp_dir().join("browser-startup-error.log"), &note);
+            std::process::exit(1);
+        }
+    }
 }

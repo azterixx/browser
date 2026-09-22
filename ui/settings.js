@@ -275,6 +275,17 @@ async function installUpdate() {
 
 $('up-btn').addEventListener('click', () => (found ? installUpdate() : checkUpdates(true)));
 
+$('logs').addEventListener('click', async () => {
+  const b = $('logs');
+  try {
+    await invoke('open_logs');
+  } catch (e) {
+    $('log-path').textContent = `Could not open the folder: ${e}`;
+    b.textContent = 'Failed';
+    setTimeout(() => { b.textContent = 'Show logs'; }, 2500);
+  }
+});
+
 // ---------- init ----------
 
 document.querySelector('.brand-icon').innerHTML = ICONS.gear;
