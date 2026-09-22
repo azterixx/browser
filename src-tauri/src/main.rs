@@ -1840,16 +1840,22 @@ fn main() {
                 app.set_menu(build_menu(&handle)?)?;
             }
             let window = wb.build()?;
+            log::info!("main window created");
 
             let os = std::env::consts::OS;
             let (pos, size) = ui_bounds(&handle, &window);
-            window.add_child(
+            let toolbar = |transparent: bool| {
                 ui_builder(&handle)
-                    .transparent(true)
-                    .initialization_script(format!("document.documentElement.dataset.os = '{os}';")),
-                pos,
-                size,
-            )?;
+                    .transparent(transparent)
+                    .initialization_script(format!("document.documentElement.dataset.os = '{os}';"))
+            };
+            // A transparent child webview is a WebView2 feature that some Windows
+            // builds refuse; an opaque toolbar is better than no browser at all.
+            if let Err(e) = window.add_child(toolbar(true), pos, size) {
+                log::warn!("transparent toolbar failed ({e}), retrying opaque");
+                window.add_child(toolbar(false), pos, size)?;
+            }
+            log::info!("toolbar webview created");
 
             let h = handle.clone();
             window.on_window_event(move |e| {
@@ -1876,13 +1882,26 @@ fn main() {
 
 
             // `browser url1 url2 …` opens each as a tab.
+            // A tab that refuses to open is logged, not fatal: the window stays up
+            // and the address bar still works.
             let args: Vec<String> = std::env::args().skip(1).collect();
-            if args.is_empty() && !restore_session(&handle)? {
-                open_tab(&handle, home(&handle))?;
+            if args.is_empty() {
+                match restore_session(&handle) {
+                    Ok(true) => log::info!("session restored"),
+                    Ok(false) => {
+                        if let Err(e) = open_tab(&handle, home(&handle)) {
+                            log::error!("could not open the first tab: {e}");
+                        }
+                    }
+                    Err(e) => log::error!("could not restore the session: {e}"),
+                }
             }
             for arg in args {
-                open_tab(&handle, parse_input(&handle, &arg))?;
+                if let Err(e) = open_tab(&handle, parse_input(&handle, &arg)) {
+                    log::error!("could not open {arg}: {e}");
+                }
             }
+            log::info!("startup finished");
             Ok(())
         })
         .build(tauri::generate_context!());
