@@ -1799,6 +1799,21 @@ fn main() {
                 std::env::consts::OS,
                 std::env::consts::ARCH
             );
+            // No engine, no browser. Windows borrows WebView2 from Edge, and Wine
+            // or a stripped-down system may not have it; say so instead of dying blank.
+            match tauri::webview_version() {
+                Ok(v) => log::info!("webview engine {v}"),
+                Err(e) => {
+                    log::error!("no webview engine: {e}");
+                    let note = format!(
+                        "Browser needs the WebView2 runtime and could not find it: {e}\n\
+                         Install it from https://developer.microsoft.com/microsoft-edge/webview2\n"
+                    );
+                    eprintln!("{note}");
+                    let _ = std::fs::write(std::env::temp_dir().join("browser-startup-error.log"), &note);
+                    std::process::exit(1);
+                }
+            }
             {
                 let st = app.state::<State>();
                 let mut b = st.lock().unwrap();
