@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="brand-icon"></span>Settings</div>
+    <label class="search">
+      <span class="search-icon"></span>
+      <input id="search" placeholder="Search settings" spellcheck="false" autocomplete="off">
+    </label>
+    <span></span>
+  </header>
+
+  <nav id="nav"></nav>
+
+  <main id="main">
+    <section id="appearance" data-title="Appearance">
+      <h2>Appearance</h2>
+      <div class="card">
+        <div class="row stack" data-keywords="layout tabs island sidebar arc chrome classic bottom floating hide">
+          <div class="label">Layout<small>Where your tabs and the address bar live</small></div>
+          <div id="modes" class="modes"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="search-engine" data-title="Search engine">
+      <h2>Search engine</h2>
+      <div class="card">
+        <div class="row" data-keywords="search engine address bar google duckduckgo bing yandex">
+          <div class="label">Search engine used in the address bar</div>
+          <select id="engine">
+            <option value="google">Google</option>
+            <option value="duckduckgo">DuckDuckGo</option>
+            <option value="bing">Bing</option>
+            <option value="yandex">Yandex</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section id="startup" data-title="On startup">
+      <h2>On startup</h2>
+      <div class="card">
+        <div class="row" data-keywords="startup restore session continue where left off reopen tabs quit">
+          <div class="label">Continue where you left off<small>Reopens your tabs after you quit. Each one loads when you open it.</small></div>
+          <button id="restore" class="toggle" role="switch"></button>
+        </div>
+      </div>
+      <h2>New tab page</h2>
+      <div class="card">
+        <label class="row radio" data-keywords="new tab home page startup">
+          <input type="radio" name="home" value="engine">
+          <div class="label">Search engine home page</div>
+        </label>
+        <label class="row radio" data-keywords="new tab home page custom url startup">
+          <input type="radio" name="home" value="custom">
+          <div class="label">A specific page<small><input id="homeUrl" class="text" placeholder="Enter URL" spellcheck="false"></small></div>
+        </label>
+      </div>
+    </section>
+
+    <section id="performance" data-title="Performance">
+      <h2>Performance</h2>
+      <div class="card">
+        <div class="row" data-keywords="memory saver sleep tabs ram performance">
+          <div class="label">Memory Saver<small>Frees memory from tabs you're not using. They reload when you come back.</small></div>
+          <button id="saver" class="toggle" role="switch"></button>
+        </div>
+        <div class="row" id="sleepRow" data-keywords="memory saver sleep after minutes">
+          <div class="label">Put inactive tabs to sleep after</div>
+          <select id="sleep">
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section id="extensions" data-title="Extensions">
+      <h2>Extensions</h2>
+      <div class="card">
+        <div class="row stack" data-keywords="extensions install chrome web store add">
+          <div class="label">Add from Chrome Web Store<small>Paste a link to an extension's page. Extensions that need Chrome-only features may not work.</small></div>
+          <div class="inline">
+            <input id="extInput" class="text grow" placeholder="https://chromewebstore.google.com/detail/…" spellcheck="false">
+            <button id="extAdd" class="btn primary">Add</button>
+            <button id="store" class="btn">Open Web Store</button>
+          </div>
+          <div id="extStatus" class="status"></div>
+        </div>
+        <div id="extList"></div>
+      </div>
+    </section>
+
+    <section id="privacy" data-title="Privacy and security">
+      <h2>Privacy and security</h2>
+      <div class="card">
+        <div class="row" data-keywords="history save remember visited sites suggestions address bar">
+          <div class="label">Save browsing history<small>Used for suggestions in the address bar. Stays on this Mac.</small></div>
+          <button id="history" class="toggle" role="switch"></button>
+        </div>
+        <div class="row" data-keywords="clear delete history visited sites">
+          <div class="label">Clear history<small>Forgets every site you've visited.</small></div>
+          <button id="clearHistory" class="btn danger">Clear history</button>
+        </div>
+        <div class="row" data-keywords="delete clear browsing data cookies cache privacy">
+          <div class="label">Delete browsing data<small>Cookies, cache and site data for every site. You'll be signed out of most sites.</small></div>
+          <button id="clear" class="btn danger">Delete data</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="updates" data-title="Updates">
+      <h2>Updates</h2>
+      <div class="card">
+        <div class="row" data-keywords="update upgrade new version download install restart">
+          <div class="label">Browser updates itself<small id="up-status">Checking for updates…</small></div>
+          <button id="up-btn" class="btn">Check for updates</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" data-title="About Browser">
+      <h2>About Browser</h2>
+      <div class="card">
+        <div class="row" data-keywords="about version engine">
+          <div class="label">Browser<small id="version"></small></div>
+        </div>
+        <div class="row" data-keywords="about engine webkit webview2">
+          <div class="label">Engine<small id="engine-name"></small></div>
+        </div>
+      </div>
+    </section>
+
+    <p id="nothing" class="nothing" hidden>No search results found</p>
+  </main>
+  <script src="settings.js"></script>
+</body>
+</html>

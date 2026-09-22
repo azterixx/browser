@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="strip" data-tauri-drag-region>
+    <div class="tint"></div><div class="tint"></div>
+    <div id="pill" role="button" title="Search and tabs (⌘L)">
+      <span id="pillNav" class="pill-btns"></span>
+      <span id="dots"></span>
+      <img id="fav" alt="">
+      <span id="domain"></span>
+      <button id="pzoom" class="p-zoom" title="Reset zoom (⌘0)" hidden></button>
+      <span class="pill-sep"></span>
+      <span id="pillActions" class="pill-btns"></span>
+    </div>
+  </div>
+
+  <div id="chromebar">
+    <div id="ctabs-row" data-tauri-drag-region>
+      <div id="ctabs"></div>
+      <button id="cadd" class="c-newtab" title="New tab"></button>
+      <span class="c-spacer" data-tauri-drag-region></span>
+      <button id="csearch" class="c-newtab" title="Search tabs"></button>
+    </div>
+    <div id="cnav">
+      <button id="cback" class="c-btn" title="Back"></button>
+      <button id="cforward" class="c-btn" title="Forward"></button>
+      <button id="creload" class="c-btn" title="Reload"></button>
+      <div id="omnibox">
+        <span id="cinfo" class="o-chip"></span>
+        <input id="caddr" spellcheck="false" autocomplete="off" placeholder="Search Google or type a URL">
+        <button id="czoom" class="o-zoom" title="Reset zoom (⌘0)" hidden></button>
+      </div>
+      <button id="cdl" class="c-btn" title="Downloads" hidden></button>
+      <button id="cext" class="c-btn" title="Extensions"></button>
+      <button id="cgear" class="c-btn" title="Customize and control Browser"></button>
+    </div>
+  </div>
+
+  <aside id="sidebar">
+    <div id="s-top" data-tauri-drag-region>
+      <span class="s-nav">
+        <button id="sback" class="c-btn" title="Back"></button>
+        <button id="sforward" class="c-btn" title="Forward"></button>
+        <button id="sreload" class="c-btn" title="Reload"></button>
+      </span>
+    </div>
+    <button id="saddr" title="Search or enter address (⌘L)"></button>
+    <div id="stabs"></div>
+    <button id="snew" class="s-row s-new"><span class="ico"></span><span class="title">New Tab</span></button>
+    <div id="s-foot">
+      <button id="sgear" class="c-btn" title="Settings"></button>
+      <button id="sdl" class="c-btn" title="Downloads" hidden></button>
+    </div>
+  </aside>
+
+  <div id="edge"></div>
+
+  <div id="backdrop"></div>
+  <div id="anchor">
+    <div id="panel">
+      <div class="panel-row">
+        <input id="address" spellcheck="false" autocomplete="off" placeholder="Search or enter address">
+        <span id="panelActions" class="panel-actions"></span>
+      </div>
+      <div id="list"></div>
+      <div id="footer">
+        <button id="newtab" class="footer-new"><span>new tab</span><span class="footer-kbd" data-key="T"></span></button>
+        <span class="footer-right">
+          <span class="hint">↑↓ move · ↵ open · esc close</span>
+          <button id="gear" class="act-btn" title="Settings"></button>
+        </span>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

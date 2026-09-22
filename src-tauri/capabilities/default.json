@@ -1,0 +1,8 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "IPC for the toolbar and for internal pages (browser://settings). Capabilities only match local app URLs, so websites in tabs get nothing; verified: remote pages are denied.",
+  "windows": ["main"],
+  "webviews": ["ui", "tab-*"],
+  "permissions": ["core:default", "core:window:allow-start-dragging"]
+}

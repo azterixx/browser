@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PDF</title>
+  <link rel="stylesheet" href="pdfjs/pdf_viewer.css">
+  <link rel="stylesheet" href="pdf.css">
+</head>
+<body>
+  <header id="toolbar">
+    <div class="start">
+      <button id="menu" class="icon" title="Menu"></button>
+      <span id="title"></span>
+    </div>
+    <div class="center">
+      <span class="group">
+        <input id="pageInput" class="field" inputmode="numeric" spellcheck="false" aria-label="Page number">
+        <span class="slash">/</span>
+        <span id="pageCount"></span>
+      </span>
+      <span class="sep"></span>
+      <span class="group">
+        <button id="zoomOut" class="icon" title="Zoom out"></button>
+        <input id="zoomInput" class="field zoom" spellcheck="false" aria-label="Zoom level">
+        <button id="zoomIn" class="icon" title="Zoom in"></button>
+      </span>
+      <span class="sep"></span>
+      <span class="group">
+        <button id="fit" class="icon" title="Fit to page"></button>
+        <button id="rotate" class="icon" title="Rotate counterclockwise"></button>
+      </span>
+      <span class="sep"></span>
+      <span class="group">
+        <button id="annotate" class="icon" title="Annotate"></button>
+        <button id="undo" class="icon" title="Undo" disabled></button>
+        <button id="redo" class="icon" title="Redo" disabled></button>
+      </span>
+    </div>
+    <div class="end">
+      <button id="download" class="icon" title="Download"></button>
+      <button id="print" class="icon" title="Print"></button>
+      <button id="more" class="icon" title="More actions"></button>
+    </div>
+  </header>
+
+  <div id="body">
+    <aside id="sidebar" hidden>
+      <div id="sideTabs" hidden>
+        <button id="showThumbs" class="icon on" title="Thumbnails"></button>
+        <button id="showOutline" class="icon" title="Document outline"></button>
+      </div>
+      <div id="thumbs"></div>
+      <div id="outline" hidden></div>
+    </aside>
+    <div id="viewerContainer" tabindex="0">
+      <div id="viewer" class="pdfViewer"></div>
+    </div>
+  </div>
+
+  <div id="menuPopup" class="popup" hidden>
+    <button class="item" data-act="twoPage"><span class="check"></span>Two-page view</button>
+    <button class="item on" data-act="annotations"><span class="check"></span>Annotations</button>
+    <div class="line"></div>
+    <button class="item" data-act="present"><span class="check"></span>Present</button>
+    <button class="item" data-act="properties"><span class="check"></span>Document properties</button>
+  </div>
+
+  <div id="findbar" hidden>
+    <input id="findInput" placeholder="Find in document" spellcheck="false">
+    <span id="findCount"></span>
+    <button id="findPrev" class="ficon" title="Previous (Shift+Enter)"></button>
+    <button id="findNext" class="ficon" title="Next (Enter)"></button>
+    <button id="findClose" class="ficon" title="Close (Esc)"></button>
+  </div>
+
+  <div id="props" class="dialog-back" hidden>
+    <div class="dialog" role="dialog" aria-label="Document properties">
+      <h3>Document properties</h3>
+      <dl id="propsList"></dl>
+      <div class="dialog-actions"><button id="propsClose" class="text-btn">Close</button></div>
+    </div>
+  </div>
+
+  <div id="error" hidden>
+    <p>Couldn't load PDF document</p>
+    <small id="errorText"></small>
+    <button id="native" class="text-btn">Open in the built-in viewer</button>
+  </div>
+
+  <div id="printContainer"></div>
+  <script type="module" src="pdf.js"></script>
+</body>
+</html>

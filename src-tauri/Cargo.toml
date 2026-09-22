@@ -1,0 +1,32 @@
+[package]
+name = "browser"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["unstable", "macos-private-api"] }
+serde = { version = "1", features = ["derive"] }
+url = "2"
+serde_json = "1"
+ureq = { version = "2", default-features = false, features = ["native-tls"] }
+native-tls = "0.2"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+tauri-plugin-updater = "2"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+
+# Web extensions on macOS (WKWebExtension, macOS 15.4+). wry already links these crates.
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+block2 = "0.6"
+objc2-foundation = { version = "0.3", features = ["NSURL", "NSString", "NSSet", "NSError", "NSArray", "NSEnumerator"] }
+objc2-web-kit = { version = "0.3", features = ["WKWebExtension", "WKWebExtensionContext", "WKWebExtensionController", "WKWebExtensionControllerConfiguration", "WKWebExtensionPermission", "WKWebExtensionMatchPattern", "WKWebViewConfiguration", "block2"] }
